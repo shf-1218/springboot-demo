@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="springboot-error" />
+        <module name="springboot-jdbc" />
+        <module name="springboot-tasks" />
+        <module name="springboot-application" />
+        <module name="springboot-jpa" />
+        <module name="springboot-beetlsql" />
+        <module name="springboot-redis (1)" />
+        <module name="springboot-swagger" />
+        <module name="springboot-redis" />
+        <module name="springboot-jedis" />
+        <module name="springboot-shiro" />
+        <module name="springboot-mybatis" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="springboot-actuator" target="1.8" />
+      <module name="springboot-application" target="1.8" />
+      <module name="springboot-beetlsql" target="1.8" />
+      <module name="springboot-dynamic" target="1.8" />
+      <module name="springboot-error" target="1.8" />
+      <module name="springboot-jdbc" target="1.8" />
+      <module name="springboot-jedis" target="1.8" />
+      <module name="springboot-jpa" target="1.8" />
+      <module name="springboot-mybatis" target="1.8" />
+      <module name="springboot-redis" target="1.8" />
+      <module name="springboot-redis (1)" target="1.8" />
+      <module name="springboot-shiro" target="1.8" />
+      <module name="springboot-swagger" target="1.8" />
+      <module name="springboot-tasks" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="springboot-actuator" options="-parameters" />
+      <module name="springboot-application" options="-parameters" />
+      <module name="springboot-beetlsql" options="-parameters" />
+      <module name="springboot-dynamic" options="-parameters" />
+      <module name="springboot-error" options="-parameters" />
+      <module name="springboot-jdbc" options="-parameters" />
+      <module name="springboot-jedis" options="-parameters" />
+      <module name="springboot-jpa" options="-parameters" />
+      <module name="springboot-mybatis" options="-parameters" />
+      <module name="springboot-redis" options="-parameters" />
+      <module name="springboot-redis (1)" options="-parameters" />
+      <module name="springboot-shiro" options="-parameters" />
+      <module name="springboot-swagger" options="-parameters" />
+      <module name="springboot-tasks" options="-parameters" />
+    </option>
+  </component>
+</project>

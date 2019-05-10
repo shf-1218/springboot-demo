@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/springboot-application/springboot-application.iml" filepath="$PROJECT_DIR$/springboot-application/springboot-application.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-error/springboot-error.iml" filepath="$PROJECT_DIR$/springboot-error/springboot-error.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-jdbc/springboot-jdbc.iml" filepath="$PROJECT_DIR$/springboot-jdbc/springboot-jdbc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-jedis/springboot-jedis.iml" filepath="$PROJECT_DIR$/springboot-jedis/springboot-jedis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-jpa/springboot-jpa.iml" filepath="$PROJECT_DIR$/springboot-jpa/springboot-jpa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-mybatis/springboot-mybatis.iml" filepath="$PROJECT_DIR$/springboot-mybatis/springboot-mybatis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-redis/springboot-redis.iml" filepath="$PROJECT_DIR$/springboot-redis/springboot-redis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-shiro/springboot-shiro.iml" filepath="$PROJECT_DIR$/springboot-shiro/springboot-shiro.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-swagger/springboot-swagger.iml" filepath="$PROJECT_DIR$/springboot-swagger/springboot-swagger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-tasks/springboot-tasks.iml" filepath="$PROJECT_DIR$/springboot-tasks/springboot-tasks.iml" />
+    </modules>
+  </component>
+</project>

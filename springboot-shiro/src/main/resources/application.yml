@@ -1,0 +1,46 @@
+
+## 服务配置
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    #客户端超时时间单位是毫秒 默认是2000
+    timeout: 10000
+    lettuce:
+      pool:
+        #最大空闲数
+        max-idle: 8
+        #连接池的最大数据库连接数
+        max-active: 8
+        #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 1000
+        #连接池中的最小空闲连接
+        min-idle: 0
+      #关闭超时时间
+      shutdown-timeout: 100
+
+
+## mybatis
+mybatis:
+  type-aliases-package: com.hongfei.springbootshiro.model
+  type-handlers-package: com.hongfei.springbootshiro.dao
+  mapper-locations: classpath*:mapper/**/*.xml
+
+## mapper
+mapper:
+  mappers: tk.mybatis.mapper.common.BaseMapper
+  not-empty: false
+  identity: Mysql
+
+## pagehelper
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+  auto-runtime-dialect: true

@@ -1,0 +1,6 @@
+#默认的 8080 我们将它改成 8088
+server:
+  port: 8088
+  servlet:
+    ## 未定义上下文路径之前 地址是 http://localhost:8080 定义了后 http://localhost:8088 你能在tomcat做的事情，配置文件都可以
+    context-path: /prod

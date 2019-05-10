@@ -1,0 +1,10 @@
+#\u591A\u73AF\u5883\u5316\u914D\u7F6E
+spring:
+  profiles:
+    active: dev
+
+
+
+person:
+  age: 25
+  name: hongfei
