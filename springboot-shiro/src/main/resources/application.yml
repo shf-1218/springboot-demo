@@ -1,13 +1,24 @@
-
 ## 服务配置
 server:
   port: 8080
+##  servlet:
+##    context-path: /shiro-demo
 spring:
   profiles:
-    active: dev
+    active: @spring.profiles.active@
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 1
+    minIdle: 1
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    validationQuery: SELECT 1
+    filters: stat,log4j,wall,config
   redis:
     #客户端超时时间单位是毫秒 默认是2000
     timeout: 10000
@@ -27,15 +38,12 @@ spring:
 
 ## mybatis
 mybatis:
-  type-aliases-package: com.hongfei.springbootshiro.model
-  type-handlers-package: com.hongfei.springbootshiro.dao
+  type-aliases-package: com.hongfei.springbootshiro.**.model
+  type-handlers-package: com.hongfei.springbootshiro.**.mapper
   mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-## mapper
-mapper:
-  mappers: tk.mybatis.mapper.common.BaseMapper
-  not-empty: false
-  identity: Mysql
 
 ## pagehelper
 pagehelper:

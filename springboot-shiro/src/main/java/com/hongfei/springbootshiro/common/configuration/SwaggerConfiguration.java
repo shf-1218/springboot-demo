@@ -3,6 +3,8 @@ package com.hongfei.springbootshiro.common.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -19,18 +21,29 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-public class SwaggerConfiguration {
+public class SwaggerConfiguration implements WebMvcConfigurer {
 
     @Value(value = "${swagger.enable}")
     private boolean swaggerEnable;
 
+    /**
+     * 显示swagger-ui.html文档展示页，还必须注入swagger资源：
+     *
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
                 //.apis(RequestHandlerSelectors.withMethodAnnotation(ResponseBody.class))
-                .apis(RequestHandlerSelectors.basePackage("com.hongfei.springbootshiro.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .enable(swaggerEnable)

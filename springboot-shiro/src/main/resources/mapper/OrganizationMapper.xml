@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongfei.springbootshiro.user.mapper.OrganizationMapper">
+    <resultMap id="BaseResultMap" type="com.hongfei.springbootshiro.user.model.Organization">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime"/>
+        <result column="mtime" jdbcType="TIMESTAMP" property="mtime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,name,full_name,description,parent_id,status,ctime,mtime
+    </sql>
+    <select id="selectAllByParam" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM organization where parent_id=#{parentId}
+    </select>
+
+    <select id="isExistName" resultType="java.lang.Boolean">
+        SELECT exists(
+        SELECT * FROM organization WHERE status!=0 AND full_name = #{name}
+        <if test="id!=null">
+            and id!=#{id}
+        </if>
+        )
+    </select>
+    <update id="updateStatus">
+        update organization set status=#{status} where id=#{id} and status!=0
+    </update>
+    <select id="selectById" resultMap="BaseResultMap">
+        select * from organization where id=#{id}
+    </select>
+
+    <insert id="insert" parameterType="com.hongfei.springbootshiro.user.model.Organization" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into organization
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null and id!=0">
+                id,
+            </if>
+            <if test="name!=null and name!=''">
+                name,
+            </if>
+            <if test="fullName!=null and fullName!=''">
+                full_name,
+            </if>
+            <if test="description!=null and description!=''">
+                description,
+            </if>
+            <if test="parentId!=null">
+                parent_id,
+            </if>
+            <if test="status!=null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null and id!=0">
+                #{id},
+            </if>
+            <if test="name!=null and name!=''">
+                #{name},
+            </if>
+            <if test="fullName!=null and fullName!=''">
+                #{fullName},
+            </if>
+            <if test="description!=null and description!=''">
+                #{description},
+            </if>
+            <if test="parentId!=null">
+                #{parentId},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.hongfei.springbootshiro.user.model.Organization">
+        update organization
+        <set>
+            <if test="name!=null and name!=''">
+                name=#{name},
+            </if>
+            <if test="fullName!=null and fullName!=''">
+                full_name=#{fullName},
+            </if>
+            <if test="description!=null and description!=''">
+                description=#{description},
+            </if>
+            <if test="parentId!=null">
+                parent_id=#{parentId},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

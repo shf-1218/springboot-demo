@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+
+
 import javax.persistence.Id;
 import java.io.Serializable;
 
@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Entity(name = "t_user")
 public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @ApiModelProperty(name = "id",value = "主键Id",dataType = "Long")
     private Long id;
     @ApiModelProperty(name = "username",required = true,value = "用户名",dataType = "String")

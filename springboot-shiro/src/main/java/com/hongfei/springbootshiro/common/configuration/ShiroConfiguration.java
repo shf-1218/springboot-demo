@@ -1,7 +1,5 @@
 package com.hongfei.springbootshiro.common.configuration;
 
-import com.hongfei.springbootshiro.common.redis.RedisSessionDAO;
-import com.hongfei.springbootshiro.common.redis.RedisShiroCacheManager;
 import com.hongfei.springbootshiro.common.shiro.ShiroRealm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -15,7 +13,11 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.ShiroHttpSession;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +37,14 @@ import java.util.Map;
 @Configuration
 public class ShiroConfiguration {
 
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
+
+    @Value("${spring.redis.timeout}")
+    private int timeout;
 
     /**
      * 修复Spring Boot整合shiro出现UnavailableSecurityManagerException 问题
@@ -42,10 +52,11 @@ public class ShiroConfiguration {
      */
     @Bean
     public FilterRegistrationBean<DelegatingFilterProxy> delegatingFilterProxy() {
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("ShiroConfiguration.delegatingFilterProxy()");
         }
-        FilterRegistrationBean<DelegatingFilterProxy> filterRegistrationBean = new FilterRegistrationBean<DelegatingFilterProxy>();
+        FilterRegistrationBean<DelegatingFilterProxy> filterRegistrationBean =
+                new FilterRegistrationBean<DelegatingFilterProxy>();
         DelegatingFilterProxy proxy = new DelegatingFilterProxy();
         proxy.setTargetFilterLifecycle(true);
         proxy.setTargetBeanName("shiroFilter");
@@ -55,25 +66,17 @@ public class ShiroConfiguration {
 
     /**
      * shiro 核心
+     *
      * @return
      */
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilter() {
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("ShiroConfiguration.shirFilter()");
         }
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 设置securityManager，其中注入了自定义的Realm
         shiroFilterFactoryBean.setSecurityManager(securityManager());
-
-        // 登陆url 如果不设置值，默认会自动寻找Web工程根目录下的"/login.jsp"页面 或 "/login" 映射
-        shiroFilterFactoryBean.setLoginUrl("/login");
-
-        // 成功登陆后打开的url
-        shiroFilterFactoryBean.setSuccessUrl("/index");
-
-        // 授权失败跳转的页面
-        shiroFilterFactoryBean.setUnauthorizedUrl("/login");
 
         Map<String, Filter> filtersMap = shiroFilterFactoryBean.getFilters();
         // 添加过滤器，例如：验证码过滤器 KaptchaFilter
@@ -81,20 +84,7 @@ public class ShiroConfiguration {
 
         // 权限过滤链
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        /*
-         * rest： 比如/admins/user/**=rest[user],根据请求的方法，相当于/admins/user/**=perms[user：method] ,其中method为post，get，delete等。
-         * port： 比如/admins/user/**=port[8081],当请求的url的端口不是8081是跳转到schemal：//serverName：8081?queryString,其中schmal是协议http或https等，serverName是你访问的host,8081是url配置里port的端口，queryString是你访问的url里的？后面的参数。
-         * perms：比如/admins/user/**=perms[user：add：*],perms参数可以写多个，多个时必须加上引号，并且参数之间用逗号分割，比如/admins/user/**=perms["user：add：*,user：modify：*"]，当有多个参数时必须每个参数都通过才通过，想当于isPermitedAll()方法。
-         * roles：比如/admins/user/**=roles[admin],参数可以写多个，多个时必须加上引号，并且参数之间用逗号分割，当有多个参数时，比如/admins/user/**=roles["admin,guest"],每个参数通过才算通过，相当于hasAllRoles()方法。//要实现or的效果看http://zgzty.blog.163.com/blog/static/83831226201302983358670/
-         * anon： 比如/admins/**=anon 没有参数，表示可以匿名使用。
-         * authc：比如/admins/user/**=authc表示需要认证才能使用，没有参数
-         * authcBasic：比如/admins/user/**=authcBasic没有参数表示httpBasic认证
-         * ssl：  比如/admins/user/**=ssl没有参数，表示安全的url请求，协议为https
-         * user： 比如/admins/user/**=user没有参数表示必须存在用户，当登入操作时不做检查
-         */
-        filterChainDefinitionMap.put("/login.jsp", "anon");
-        filterChainDefinitionMap.put("/test/checkAuthc", "authc");
-        filterChainDefinitionMap.put("/test/**", "anon");
+
         // druid过滤
         filterChainDefinitionMap.put("/druid", "anon");
         // swagger过滤
@@ -104,27 +94,28 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/webjars/**", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         // 其他需要授权
-        filterChainDefinitionMap.put("/*", "authc");
+        filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
     }
+
     /**
-     * SecurityManager: 安全管理器，注入有Realm、SessionManager、RememberMeManager
-     *
-     * @return SecurityManager
+     * 安全管理器，注入有Realm、SessionManager、RememberMeManager
      */
     @Bean
     public SecurityManager securityManager() {
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("ShiroConfiguration.securityManager()");
         }
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
         defaultWebSecurityManager.setRealm(shiroRealm());
-        // 自定义缓存实现，使用 Redis
-        defaultWebSecurityManager.setCacheManager(redisCacheManager());
+        // 自定义缓存实现 使用redis
+        defaultWebSecurityManager.setCacheManager(cacheManager());
+        // 自定义session管理 使用redis
         defaultWebSecurityManager.setSessionManager(sessionManager());
-        defaultWebSecurityManager.setRememberMeManager(rememberMeManager());
+
+       // defaultWebSecurityManager.setRememberMeManager(rememberMeManager());
         return defaultWebSecurityManager;
     }
 
@@ -133,7 +124,7 @@ public class ShiroConfiguration {
      */
     @Bean
     public ShiroRealm shiroRealm() {
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("ShiroConfiguration.shiroRealm()");
         }
         ShiroRealm shiroRealm = new ShiroRealm();
@@ -156,10 +147,47 @@ public class ShiroConfiguration {
         return hashedCredentialsMatcher;
     }
 
+    /**
+     * 配置shiro redisManager
+     * 使用的是shiro-redis开源插件
+     *
+     * @return
+     */
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost(host);
+        redisManager.setPort(port);
+        redisManager.setTimeout(1800);// 配置缓存过期时间
+        redisManager.setTimeout(timeout);
+        return redisManager;
+    }
+
+    /**
+     * cacheManager 缓存 redis实现
+     * 使用的是shiro-redis开源插件
+     *
+     * @return
+     */
+    public RedisCacheManager cacheManager() {
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setRedisManager(redisManager());
+        return redisCacheManager;
+    }
+
+    /**
+     * RedisSessionDAO shiro sessionDao层的实现 通过redis
+     * 使用的是shiro-redis开源插件
+     */
+    @Bean
+    public RedisSessionDAO redisSessionDAO() {
+        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+        redisSessionDAO.setRedisManager(redisManager());
+        return redisSessionDAO;
+    }
 
     @Bean
     public SessionManager sessionManager() {
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("ShiroConfiguration.sessionManager()");
         }
         DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
@@ -172,27 +200,18 @@ public class ShiroConfiguration {
     }
 
 
+    /**
+     * remenberMe的管理器，注入有Cookie
+     */
     @Bean
-    public RedisSessionDAO redisSessionDAO(){
-        if(log.isDebugEnabled()){
-            log.debug("ShiroConfiguration.redisSessionDAO()");
-        }
-        return new RedisSessionDAO();
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        return cookieRememberMeManager;
     }
-
-    @Bean
-    public RedisShiroCacheManager redisCacheManager() {
-        if(log.isDebugEnabled()){
-            log.debug("ShiroConfiguration.redisCacheManager()");
-        }
-        return new RedisShiroCacheManager();
-    }
-
 
     /**
-     * rememberMeCookie: 记住自己的cookie
-     *
-     * @return SimpleCookie
+     * 记住自己的cookie
      */
     @Bean
     public SimpleCookie rememberMeCookie() {
@@ -205,27 +224,13 @@ public class ShiroConfiguration {
 
 
     /**
-     * RememberMeManager: remenberMe的管理器，注入有Cookie
-     *
-     * @return CookieRememberMeManager
-     */
-    @Bean
-    public CookieRememberMeManager rememberMeManager() {
-        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-        cookieRememberMeManager.setCookie(rememberMeCookie());
-        return cookieRememberMeManager;
-    }
-
-
-
-    /**
      * Shiro生命周期处理器
      *
      * @return
      */
     @Bean(name = "lifecycleBeanPostProcessor")
     public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("ShiroConfiguration.lifecycleBeanPostProcessor()");
         }
         return new LifecycleBeanPostProcessor();
@@ -239,7 +244,7 @@ public class ShiroConfiguration {
      */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("ShiroConfiguration.authorizationAttributeSourceAdvisor()");
         }
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
@@ -249,6 +254,7 @@ public class ShiroConfiguration {
 
     /**
      * 自动创建代理类，若不添加，Shiro的注解可能不会生效。
+     *
      * @return
      */
     @Bean

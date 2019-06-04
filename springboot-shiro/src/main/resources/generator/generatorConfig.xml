@@ -13,14 +13,8 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
-        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
-            <!-- 此处的 MyMapper注意一定不能被扫描到-->
-            <property name="mappers" value="tk.mybatis.mapper.common.BaseMapper"/>
-            <!-- caseSensitive 是否区分大小写，默认值 false。如果数据库区分大小写，这里就需要配置为 true，这样当表名为 USER 时，
-             会生成 @Table(name = "USER") 注解，否则使用小写 user 时会找不到表。-->
-            <property name="caseSensitive" value="true"/>
-            <!--forceAnnotation 是否强制生成注解，默认 false，如果设置为 true，不管数据库名和字段名是否一致，都会生成注解（包含 @Table 和 @Column）。-->
-            <property name="forceAnnotation" value="true"/>
+        <plugin type="com.chrm.mybatis.generator.plugins.LombokPlugin">
+            <property name="hasLombok" value="true"/>
         </plugin>
 
         <!-- 注释 规则-->
@@ -32,9 +26,8 @@
 
 
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.1.131:3306/shiro"
-                        userId="root"
-                        password="root">
+                        connectionURL="jdbc:mysql://192.168.5.135:3316/shiro_demo"
+                        userId="databank_135" password="yoYi_2016">
         </jdbcConnection>
 
         <javaModelGenerator targetPackage="com.hongfei.springbootshiro.user.model" targetProject="src/main/java">
@@ -54,31 +47,47 @@
         </javaClientGenerator>
 
 
-        <table tableName="user" domainObjectName="User" enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        <!--<table tableName="user" domainObjectName="User">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
-        <table tableName="role" domainObjectName="Role" enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        <table tableName="role" domainObjectName="Role">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
-        <table tableName="permission" domainObjectName="Permission" enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        <table tableName="permission" domainObjectName="Permission">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
-        <table tableName="user_role" domainObjectName="UserRole" enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        <table tableName="user_role_organization" domainObjectName="UserRoleOrganization">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
-        <table tableName="role_permission" domainObjectName="RolePermission" enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+
+        <table tableName="role_permission" domainObjectName="RolePermission">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
+        <table tableName="organization" domainObjectName="Organization">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="role_organization" domainObjectName="RoleOrganization">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="login_status" domainObjectName="LoginStatus">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="ip_forbidden" domainObjectName="IpForbidden">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="data_group" domainObjectName="DataGroup">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="data_item" domainObjectName="DataItem">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>-->
+        <table tableName="user_permission" domainObjectName="UserPermission">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+
+
     </context>
 </generatorConfiguration>

@@ -1,21 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hongfei.springbootshiro.user.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.hongfei.springbootshiro.user.model.User">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <result column="id" jdbcType="BIGINT" property="id" />
-    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
-    <result column="mtime" jdbcType="TIMESTAMP" property="mtime" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="salt" jdbcType="VARCHAR" property="salt" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
-    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.hongfei.springbootshiro.user.model.User">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="salt" jdbcType="VARCHAR" property="salt"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="ctime" jdbcType="TIMESTAMP" property="ctime"/>
+        <result column="mtime" jdbcType="TIMESTAMP" property="mtime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
+
+    <select id="isExistName" resultType="java.lang.Boolean">
+        SELECT exists(
+        SELECT * FROM user WHERE status!=0 AND name = #{name}
+        <if test="id!=null">
+            and id!=#{id}
+        </if>
+        )
+    </select>
+    <update id="updateStatus">
+        update user set status=#{status} where id=#{id}
+    </update>
+
+    <select id="selectAllByParam" resultMap="BaseResultMap">
+        select  * from user where status !=0
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        select *from user where id=#{id}
+    </select>
+
+    <insert id="insert" parameterType="com.hongfei.springbootshiro.user.model.User" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null and id!=0">
+                id,
+            </if>
+            <if test="userName!=null and userName!=''">
+                user_name,
+            </if>
+            <if test="nickName!=null and nickName!=''">
+                nick_name,
+            </if>
+            <if test="password!=null and password!=''">
+                password,
+            </if>
+            <if test="salt!=null and salt!=''">
+                salt,
+            </if>
+            <if test="email!=null and email!=''">
+                email,
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone,
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                mobile,
+            </if>
+            <if test="status!=null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null and id!=0">
+                #{id},
+            </if>
+            <if test="userName!=null and userName!=''">
+                #{userName},
+            </if>
+            <if test="nickName!=null and nickName!=''">
+                #{nickName},
+            </if>
+            <if test="password!=null and password!=''">
+                #{password},
+            </if>
+            <if test="salt!=null and salt!=''">
+                #{salt},
+            </if>
+            <if test="email!=null and email!=''">
+                #{email},
+            </if>
+            <if test="phone!=null and phone!=''">
+                #{phone},
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                #{mobile},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.hongfei.springbootshiro.user.model.User">
+        update user
+        <set>
+            <if test="userName!=null and userName!=''">
+                user_name=#{userName},
+            </if>
+            <if test="nickName!=null and nickName!=''">
+                nick_name=#{nickName},
+            </if>
+            <if test="password!=null and password!=''">
+                password=#{password},
+            </if>
+            <if test="salt!=null and salt!=''">
+                salt=#{salt},
+            </if>
+            <if test="email!=null and email!=''">
+                email=#{email},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                mobile=#{mobile},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="selectByLoginName" resultMap="BaseResultMap">
+        select * from user where user_name=#{userName}
+    </select>
 </mapper>

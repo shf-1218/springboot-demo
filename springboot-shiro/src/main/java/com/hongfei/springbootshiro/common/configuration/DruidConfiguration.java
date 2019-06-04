@@ -5,11 +5,13 @@ import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.hongfei.springbootshiro.common.properties.DruidProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -27,20 +29,21 @@ import java.sql.SQLException;
 public class DruidConfiguration {
 
     @Resource
-    private  DruidProperties properties;
+    private DruidProperties properties;
 
     /**
      * 注入 DruidDataSource
+     *
      * @return
      */
-    @Bean
-    public DataSource dataSource(){
-        DruidDataSource dataSource=new DruidDataSource();
+    @Bean(name = "dataSource")
+    public DataSource dataSource() {
+        DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(properties.getUrl());
         dataSource.setDriverClassName(properties.getDriverClassName());
         dataSource.setUsername(properties.getUsername());
         dataSource.setPassword(properties.getPassword());
-        dataSource.setConnectionProperties("config.decrypt=true;config.decrypt.key=" + properties.getPublicKey());
+        //dataSource.setConnectionProperties("config.decrypt=true;config.decrypt.key=" + properties.getPublicKey());
         dataSource.setInitialSize(properties.getInitialSize());
         dataSource.setMinIdle(properties.getInitialSize());
         dataSource.setMaxActive(properties.getMaxActive());
@@ -64,11 +67,13 @@ public class DruidConfiguration {
 
     /**
      * 注入Druid的StatViewServlet
+     *
      * @return
      */
     @Bean
-    public ServletRegistrationBean<StatViewServlet> druidStatViewServlet(){
-        ServletRegistrationBean<StatViewServlet> servletRegistrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
+    public ServletRegistrationBean<StatViewServlet> druidStatViewServlet() {
+        ServletRegistrationBean<StatViewServlet> servletRegistrationBean =
+                new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
         servletRegistrationBean.addInitParameter("loginUsername", properties.getUsername());
         servletRegistrationBean.addInitParameter("loginPassword", properties.getPassword());
         servletRegistrationBean.addInitParameter("resetEnable", "true");
@@ -77,15 +82,27 @@ public class DruidConfiguration {
 
     /**
      * 注入Druid的WebStatFilter
+     *
      * @return
      */
     @Bean
-    public FilterRegistrationBean<WebStatFilter> druidWebStatFilter(){
-        FilterRegistrationBean<WebStatFilter> filterRegistrationBean = new FilterRegistrationBean<>(new WebStatFilter());
+    public FilterRegistrationBean<WebStatFilter> druidWebStatFilter() {
+        FilterRegistrationBean<WebStatFilter> filterRegistrationBean =
+                new FilterRegistrationBean<>(new WebStatFilter());
         // 过滤规则
         filterRegistrationBean.addUrlPatterns("/*");
         // 过滤忽略格式
         filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;
+    }
+
+    /**
+     * 事务管理
+     * @param dataSource
+     * @return
+     */
+    @Bean(name = "transactionManager")
+    public DataSourceTransactionManager testTransactionManager(@Qualifier("dataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 }
