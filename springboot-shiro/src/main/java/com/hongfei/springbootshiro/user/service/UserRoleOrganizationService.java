@@ -50,4 +50,9 @@ public class UserRoleOrganizationService {
         List<UserRoleOrganization> userRoleOrganizationList = this.userRoleOrganizationMapper.selectByUserId(userId);
         return userRoleOrganizationList;
     }
+
+    public List<UserRoleOrganization> selectByRoleOrganizationId(Long roleOrganizationId) {
+        List<UserRoleOrganization> userRoleOrganizationList = this.userRoleOrganizationMapper.selectByRoleOrganizationId(roleOrganizationId);
+        return userRoleOrganizationList;
+    }
 }

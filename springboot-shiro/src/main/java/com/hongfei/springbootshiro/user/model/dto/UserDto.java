@@ -1,5 +1,6 @@
 package com.hongfei.springbootshiro.user.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 
@@ -17,6 +18,7 @@ public class UserDto {
     private String userName;
     private String nickName;
     private String password;
+    @JsonIgnore
     private String salt;
     private String email;
     private String phone;

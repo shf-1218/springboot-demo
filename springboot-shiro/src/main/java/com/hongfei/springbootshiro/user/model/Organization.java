@@ -37,7 +37,7 @@ public class Organization {
      * 数据状态,0:删除,1:正常,2:停用
      */
 
-    private Byte status;
+    private int status;
 
     /**
      * 创建时间

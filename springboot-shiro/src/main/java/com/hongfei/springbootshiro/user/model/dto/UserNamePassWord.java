@@ -10,5 +10,5 @@ import lombok.Data;
 public class UserNamePassWord {
     private String loginName;
     private String password;
-    private String platform;
+    private int platform;
 }

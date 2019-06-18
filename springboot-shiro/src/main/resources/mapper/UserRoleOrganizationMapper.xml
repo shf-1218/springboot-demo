@@ -58,4 +58,7 @@
     <select id="selectByUserId" resultMap="BaseResultMap">
         select * from user_role_organization where user_id=#{userId} and status!=0
     </select>
+    <select id="selectByRoleOrganizationId" resultMap="BaseResultMap">
+        select * from user_role_organization where role_organization_id=#{roleOrganizationId} and status!=0
+    </select>
 </mapper>

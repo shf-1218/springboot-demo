@@ -43,7 +43,7 @@ public class LoginStatus {
     /**
      * 登录平台 1:web 2:android 3:ios
      */
-    private Byte platform;
+    private int platform;
 
     /**
      * 创建时间
@@ -61,5 +61,5 @@ public class LoginStatus {
      * 数据状态,1:正常,2:删除
      */
 
-    private Byte status;
+    private int status;
 }

@@ -3,6 +3,7 @@ package com.hongfei.springbootredis.mapper;
 import com.hongfei.springbootredis.model.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+import tk.mybatis.mapper.common.BaseMapper;
 
 
 import java.util.List;

@@ -19,4 +19,6 @@ public interface UserRoleOrganizationMapper {
     void insert(UserRoleOrganization userRoleOrganization);
 
     List<UserRoleOrganization> selectByUserId(@Param("userId") Long userId);
+
+    List<UserRoleOrganization> selectByRoleOrganizationId(@Param("roleOrganizationId")Long roleOrganizationId);
 }

@@ -8,10 +8,6 @@ import lombok.Data;
 public class DataItem {
     private Long id;
 
-    /**
-     * 组id
-     */
-    private Long dataGroupId;
 
     /**
      * 名称
@@ -31,7 +27,7 @@ public class DataItem {
     /**
      * 数据状态,0删除,1:正常,2:禁用
      */
-    private Byte status;
+    private int status;
 
     /**
      * 创建时间

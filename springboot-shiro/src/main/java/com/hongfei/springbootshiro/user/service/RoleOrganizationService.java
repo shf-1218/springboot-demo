@@ -128,4 +128,9 @@ public class RoleOrganizationService {
     public void deleteByOrganizationId(Long organizationId) {
         this.roleOrganizationMapper.deleteByOrganizationId(organizationId);
     }
+
+    public List<RoleOrganization> selectByRoleId(Long roleId) {
+        List<RoleOrganization> roleOrganizationList = this.roleOrganizationMapper.selectByRoleId(roleId);
+        return roleOrganizationList;
+    }
 }

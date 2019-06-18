@@ -29,6 +29,8 @@ public class RoleService {
     private RolePermissionService rolePermissionService;
     @Resource
     private RoleOrganizationService roleOrganizationService;
+    @Resource
+    private UserService userService;
 
     public boolean isExistName(Long id, String name) {
         return this.roleMapper.isExistName(id, name);
@@ -62,6 +64,7 @@ public class RoleService {
         BeanUtils.copyProperties(roleDto, role);
         this.roleMapper.update(role);
         this.rolePermissionService.insert(roleDto.getPermissionIdList(), role);
+        this.userService.clearAuthorizationInfoByRoleId(roleDto.getId());
         return Result.success(role);
     }
 
@@ -108,6 +111,7 @@ public class RoleService {
         this.roleMapper.updateStatus(id, Constant.STATUS_DELETE);
         this.rolePermissionService.deleteByRoleId(id);
         this.roleOrganizationService.deleteByRoleId(id);
+        this.userService.clearAuthorizationInfoByRoleId(id);
         return Result.success(id);
     }
 
@@ -122,4 +126,6 @@ public class RoleService {
         roleDto.setPermissionIdList(permissionIdList);
         return Result.success(roleDto);
     }
+
+
 }

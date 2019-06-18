@@ -16,5 +16,5 @@ public class RoleOrganizationDto {
     private String fullName;
     private String description;
     private Long parentId;
-    private Byte status;
+    private int status;
 }

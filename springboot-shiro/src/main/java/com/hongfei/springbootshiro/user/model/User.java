@@ -52,7 +52,7 @@ public class User {
      * 数据状态,0:删除,1:正常,2:禁用账号
      */
 
-    private Byte status;
+    private int status;
     /**
      * 创建时间
      */
