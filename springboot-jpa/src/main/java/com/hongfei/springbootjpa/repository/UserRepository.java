@@ -12,7 +12,7 @@ import java.util.List;
  * @Author: Mr.Shen
  * @Description: 用户访问数据库接口
  */
-@Mapper
+@Repository
 public interface UserRepository extends JpaRepository<User,Long> {
 
     List<User> findAllByUsername(String username);
