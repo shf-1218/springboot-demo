@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: springboot-rabbitmq-producer
+  rabbitmq:
+    host: 192.168.5.134
+    port: 5672
+    username: guest
+    password: guest
+    #开启confirms回调
+    publisher-confirms: true
+    #开启returnedMessage回调
+    publisher-returns: true
+    #设置确认(ack)
+    listener:
+      direct:
+        acknowledge-mode: auto
+        prefetch: 100
+      simple:
+        acknowledge-mode: auto
+        prefetch: 100
+    template:
+      retry:
+        #重试机制
+        enabled: true
+server:
+  port: 8080

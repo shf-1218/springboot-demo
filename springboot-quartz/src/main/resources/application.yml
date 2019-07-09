@@ -1,0 +1,39 @@
+quartz:
+  enabled: true
+server:
+  port: 9091
+spring:
+  application:
+    name: Spring-Quartz-Scheduler                                       #Quartz\u8C03\u5EA6\u4E2D\u5FC3
+  datasource:
+    url: jdbc:mysql://192.168.5.135:3316/quartz
+    username: databank_135
+    password: yoYi_2016
+  quartz:
+    #\u76F8\u5173\u5C5E\u6027\u914D\u7F6E
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: DefaultQuartzScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: qrtz_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: true
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
+    #\u6570\u636E\u5E93\u65B9\u5F0F
+    job-store-type: JDBC
+    #\u521D\u59CB\u5316\u8868\u7ED3\u6784
+    jdbc:
+      initialize-schema: NEVER
+
+
